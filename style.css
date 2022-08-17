@@ -1,0 +1,42 @@
+
+body {
+    background-color: #222831;
+    font-family: Typewriter;
+}
+
+@font-face {
+    font-family: Typewriter;
+    src:url(./font/tt2020base-regular-webfont.woff) format("woff");
+}
+
+
+
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid #393E46;
+    border-radius: 25px;
+    background-color: #B55400;
+    padding: 10px;
+}
+
+.title {
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    transform: translate(-50%, -10%);
+    padding: 5px;
+}
+
+#phrase {
+    color: #EEEEEE;
+    text-align: center;
+}
+
+h1 {
+    color: #EEEEEE;
+    font-family: Arial;
+}
+
