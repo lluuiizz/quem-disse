@@ -1,3 +1,10 @@
+$(document).ready(function() {
+    $(".center").slideDown();
+
+});
+
+
+
 function submitAnswear(element) {
 
   alert(element.value)
@@ -20,4 +27,5 @@ function keyPress(e) {
     submitAnswear(element)
   }
 }
+
 
