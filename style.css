@@ -16,9 +16,9 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    border: 5px solid #393E46;
+    border: 3px solid #393E46;
     border-radius: 25px;
-    background-color: #B55400;
+    background-color: transparent;
     padding: 10px;
     margin: 0em;
     height: 180px;
