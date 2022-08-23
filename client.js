@@ -1,5 +1,7 @@
 const socket = io()
 
+var score = 5
+
 $(document).ready(function() {
     $(".center").hide();
     $("h1").hide();
@@ -8,7 +10,21 @@ $(document).ready(function() {
     $("h1").fadeIn(1500);
     $("#field").fadeIn(1500);
 
+		socket.on("initScore", () => {
+			var i
+			for (i = 0; i < score; i++) {
+			j = i + 1
+			$(".score").prepend("<img class ='hearth"+j+"'src='/images/hearth.png' alt='score'>\n");
+			}
+		})
 
+	socket.on("changeScore", ()=> {
+$(".hearth"+score).fadeOut(1000)
+
+		score -= 1
+	}) 
+
+		
     //  Change Always receives the event phrase 
     socket.on('phrase', (phrase, index)=> {
         $("#phrase").html(phrase)

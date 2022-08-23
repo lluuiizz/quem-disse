@@ -28,6 +28,21 @@ body {
     overflow-x: hidden;
 }
 
+.score {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	width: 260px;
+	background: transparent;
+	text-align: right;
+
+}
+
+.score img {
+	width: 45px;
+	height: 45px;
+}
+
 .input_box {
   position: absolute;
   left: 50%;

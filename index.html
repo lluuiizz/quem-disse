@@ -3,30 +3,36 @@
 <html lang="br">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Quem disse?</title>
-  <meta name="description" content="Advinhe quem disse a frase!!!">
-  <meta name="author" content="Luiz G. Silva">
+	<title>Quem disse?</title>
+	<meta name="description" content="Advinhe quem disse a frase!!!">
+	<link rel="shortcut icon" href="/images/favicon.ico" />
 
-  <script src="/socket.io/socket.io.js"> </script>
-  <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src='/client.js'></script>
-  <link rel="stylesheet" href="style.css">
+
+	<meta name="author" content="Luiz G. Silva">
+
+	<script src="/socket.io/socket.io.js"> </script>
+	<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src='/client.js'></script>
+	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <!-- your content here... -->
-  <div class="title">
-    <h1>QUEM DISSE?</h1>
-  </div>
-  <div class="center">
-      <h2 id="phrase"></h2>
-  </div>
-  <div class="input_box">
-    <input type="text" onkeypress="return keyPress(event)" id="field">
-  </div>
+	<!-- your content here... -->
+	<div class="title">
+		<h1>QUEM DISSE?</h1>
+	</div>
+	<div class="center">
+		<h2 id="phrase"></h2>
+	</div>
+	<div class="input_box">
+		<input type="text" onkeypress="return keyPress(event)" id="field">
+	</div>
+	<div class = "score">
+
+</div>
 </body>
 
 </html>
