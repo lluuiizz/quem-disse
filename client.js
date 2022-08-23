@@ -1,7 +1,5 @@
 const socket = io()
 
-var score = 5
-
 $(document).ready(function() {
     $(".center").hide();
     $("h1").hide();
@@ -10,32 +8,26 @@ $(document).ready(function() {
     $("h1").fadeIn(1500);
     $("#field").fadeIn(1500);
 
-    socket.on("initScore", ()=>{
+    socket.on("initLifePoints", (lifePoints)=>{
         var i
-        for (i = 0; i < score; i++) {
-            j = i + 1
-            $(".score").prepend("<img id ='hearth" + j + "'src='/images/hearth.png' alt='score'>\n");
+        for (i = 0; i < lifePoints; i++) {
+            $(".lifePoints").prepend("<img id ='hearth" + i + "'src='/images/hearth.png' alt='lifePoints'>\n");
         }
-    }
-    )
+    })
 
-    socket.on("changeScore", ()=>{
-        $("#hearth" + score).fadeOut(500)
-
-        score -= 1
-    }
-    )
+    socket.on("changeLifePoints", (lifePoints)=>{
+        $("#hearth" + lifePoints).fadeOut(500)
+    })
 
     //  Change Always receives the event phrase 
     socket.on('phrase', (phrase,index)=>{
         $("#phrase").html(phrase)
         indexesAlreadyUsed.push(index)
-    }
-    )
+    })
+    
     socket.on('win', ()=>{
         $("#phrase").html("Você Venceu!!!")
-    }
-    )
+    })
 });
 
 let indexesAlreadyUsed = Array()

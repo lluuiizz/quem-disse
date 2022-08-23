@@ -28,7 +28,7 @@ body {
     overflow-x: hidden;
 }
 
-.score {
+.lifePoints {
 	position: fixed;
 	bottom: 0;
 	right: 0;
@@ -38,7 +38,7 @@ body {
 
 }
 
-.score img {
+.lifePoints img {
 	width: 45px;
 	height: 45px;
 }
