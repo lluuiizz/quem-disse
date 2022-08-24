@@ -3,6 +3,8 @@ const http = require('http').createServer(app)
 const path = require('path')
 const io = require('socket.io')(http)
 
+//	Send Files to server
+
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html')
 });
@@ -27,6 +29,8 @@ app.get('/style.css', function(req, res) {
 app.get('/font/typewriter.woff', function(req, res) {
 	res.sendFile(__dirname + '/font/tt2020base-regular-webfont.woff')
 })
+
+//	Handle files (Text files from /phrases)
 const fs = require('fs')
 const dir = './phrases'
 
@@ -39,10 +43,12 @@ function getSomePhrase(index) {
 	return contents;
 }
 
+
 function pickRandomPhraseIndex() {
 	return generated = Math.floor(Math.random() * dirLength(dir))
 }
 
+//	Array with the lifePoints of every player online accessed by id
 var lifePointsHolder = Array()
 const newLifePoint = (id) => {
     return {
@@ -58,27 +64,35 @@ io.on('connection', socket => {
 	let phraseInfo = getSomePhrase(indexPhrase)
 
 	socket.on('answear', (answear, indexesAlreadyUsed) => {
-		if (answear == phraseInfo[phraseInfo.length - 2]) {
+		var hasSameValue = answear == phraseInfo[phraseInfo.length - 2]
+
+		if (hasSameValue) {
 			if (indexesAlreadyUsed.length < dirLength(dir)) {
+
 				while (indexesAlreadyUsed.indexOf(indexPhrase) != -1) {
 					indexPhrase = pickRandomPhraseIndex()
 				}
+
 				phraseInfo = getSomePhrase(indexPhrase)
-				socket.emit("phrase", phraseInfo[0], indexPhrase)
+				phrase = phraseInfo.slice(0, phraseInfo.length - 2)	//	Get new phrase 
+				socket.emit("phrase", phrase, indexPhrase)	//	Emit next phrase
 			}
 			else {
 				socket.emit("win")
 			}
 		}
 		else {
-            let indexIdInArray = lifePointsHolder.findIndex(i => i.id === socket.id)
-            lifePointsHolder[indexIdInArray].lifePoints -= 1
+			//	Get the index in the array of the id received, decrease lifePoints and emit the event
+			let indexIdInArray = lifePointsHolder.findIndex(i => i.id === socket.id)
+			lifePointsHolder[indexIdInArray].lifePoints -= 1
 			socket.emit("changeLifePoints", lifePointsHolder[indexIdInArray].lifePoints)
+			if (lifePointsHolder[indexIdInArray].lifePoints == 0) {socket.emit("lose")}
 		}
 	})
-    lifePointsHolder.push(newLifePoint(socket.id))
+		//	Instantiates an new element in the lifePoints array and emit the first phrase
+		lifePointsHolder.push(newLifePoint(socket.id))
     socket.emit("initLifePoints", 5)
-	socket.emit("phrase", phraseInfo.slice(0, phraseInfo.length - 2), indexPhrase);
+		socket.emit("phrase", phraseInfo.slice(0, phraseInfo.length - 2), indexPhrase);
 })
 
 http.listen(3000, function() {

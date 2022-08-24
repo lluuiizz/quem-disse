@@ -27,7 +27,15 @@ $(document).ready(function() {
     socket.on('win', ()=>{
         $("#phrase").html("Você Venceu!!!")
     })
-});
+    socket.on('lose', () => {
+        $(".center").hide(1500);
+        $("#field").hide(1500);
+        $("h1").slideUp(0)
+        $("h1").slideDown(2000)
+        $("h1").text("Você Perdeu!")
+        $("h1").fadeIn(5000)
+    })
+})
 
 let indexesAlreadyUsed = Array()
 
