@@ -6,7 +6,7 @@ length = len([name for name in os.listdir('.') if os.path.isfile(name)]) - 3
 CATEGORYS = ['Writers', 'Peoples', 'Series', 'Movies', 'Games', 'Animations']
 
 for i in range(length):
-    file = open(f'{i}.txt', 'r') 
+    file = open(f'{i}.txt', 'r')
     lines = file.readlines()
 
     for line in lines:
