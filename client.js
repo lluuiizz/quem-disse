@@ -19,12 +19,11 @@ $(document).ready(function() {
         $("#hearth" + lifePoints).fadeOut(500)
     })
 
-    //  Change Always receives the event phrase 
+    //  Change Always receives the event phrase
     socket.on('phrase', (phrase,index)=>{
         $("#phrase").html(phrase)
         indexesAlreadyUsed.push(index)
     })
-    
     socket.on('win', ()=>{
         $("#phrase").html("Você Venceu!!!")
     })
@@ -44,10 +43,10 @@ function keyPress(e) {
     var keynum;
 
     if (window.event) {
-        // IE                  
+        // IE
         keynum = e.keyCode;
     } else if (e.which) {
-        // Netscape/Firefox/Opera                 
+        // Netscape/Firefox/Opera
         keynum = e.which;
     }
 

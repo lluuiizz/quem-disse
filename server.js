@@ -56,7 +56,7 @@ io.on('connection', socket => {
 
 	let indexPhrase = pickRandomPhraseIndex()
 	let phraseInfo = getSomePhrase(indexPhrase)
-	
+
 	socket.on('answear', (answear, indexesAlreadyUsed) => {
 		if (answear == phraseInfo[phraseInfo.length - 2]) {
 			if (indexesAlreadyUsed.length < dirLength(dir)) {
@@ -76,7 +76,6 @@ io.on('connection', socket => {
 			socket.emit("changeLifePoints", lifePointsHolder[indexIdInArray].lifePoints)
 		}
 	})
-     
     lifePointsHolder.push(newLifePoint(socket.id))
     socket.emit("initLifePoints", 5)
 	socket.emit("phrase", phraseInfo.slice(0, phraseInfo.length - 2), indexPhrase);
