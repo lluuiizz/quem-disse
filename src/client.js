@@ -24,6 +24,10 @@ $(document).ready(function() {
         $("#phrase").html(phrase)
         indexesAlreadyUsed.push(index)
     })
+
+    socket.on('clearIndexArray', () => {
+        indexesAlreadyUsed = Array()
+    })
     socket.on('win', ()=>{
         $("#phrase").html("Você Venceu!!!")
     })
