@@ -1,51 +1,35 @@
 const app = require('express')()
+const express = require('express')
 const http = require('http').createServer(app)
 const path = require('path')
 const io = require('socket.io')(http)
 
 //	Send Files to server
 
-app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/index.html')
-});
-
-app.get('/images/hearth.png', (req, res) => {
-		res.sendFile(__dirname + '/images/hearth.png')
-})
-
-app.get('/images/favicon.ico', (req, res) => {
-		res.sendFile(__dirname + '/images/favicon.ico')
-})
-
-app.get('/client.js', function(req, res) {
-	res.setHeader('Content-Type', 'application/javascript')
-	res.sendFile(__dirname + '/client.js')
-})
-
-app.get('/style.css', function(req, res) {
-	res.sendFile(__dirname + '/style.css')
-})
-
-app.get('/font/typewriter.woff', function(req, res) {
-	res.sendFile(__dirname + '/font/tt2020base-regular-webfont.woff')
-})
+function sendFileToServer (serverPath, localPath) {
+	app.get(serverPath, (req, res) => {
+		res.sendFile(__dirname + localPath)
+	})
+}
+var srcPath = path.join(__dirname, 'src')
+app.use(express.static(srcPath))
 
 //	Handle files (Text files from /phrases)
 const fs = require('fs')
 const dir = './phrases'
 
-function dirLength(dir) {
-	return fs.readdirSync(dir).length - 2
+function directoryFiles(dirPath) {
+	return fs.readdirSync(dirPath)
 }
 
-function getSomePhrase(index) {
-	const contents = fs.readFileSync('./phrases/' + index.toString() + '.txt', 'utf-8').split('\n')
+function getSomePhrase(dirPath, index) {
+	const contents = fs.readFileSync(dirPath + index.toString() + '.txt', 'utf-8').split('\n')
 	return contents;
 }
 
 
-function pickRandomPhraseIndex() {
-	return generated = Math.floor(Math.random() * dirLength(dir))
+function pickRandomIndex(range) {
+	return generated = Math.floor(Math.random() * range)
 }
 
 //	Array with the lifePoints of every player online accessed by id
@@ -53,15 +37,25 @@ var lifePointsHolder = Array()
 const newLifePoint = (id) => {
     return {
         id : id,
-        lifePoints : 5
+        lifePoints : 5,
+		correctAnswears: 0
     }
 }
+
+http.listen(3000, function() {
+	console.log('Listening port 3000')
+});
+
+const categoriesOfPhrases = directoryFiles(path.join(__dirname, 'phrases'))	//	Count the amount of categories in phrases directory
+const amountOfCategories = categoriesOfPhrases.length
+console.log(categoriesOfPhrases)
 
 io.on('connection', socket => {
 	console.log("New connection", socket.id)
 
-	let indexPhrase = pickRandomPhraseIndex()
-	let phraseInfo = getSomePhrase(indexPhrase)
+	let getRandomCategorieIndex = pickRandomIndex(amountOfCategories)
+	let categorieChoosed = categoriesOfPhrases[getRandomCategorieIndex]
+	console.log(categorieChoosed)
 
 	socket.on('answear', (answear, indexesAlreadyUsed) => {
 		var hasSameValue = answear == phraseInfo[phraseInfo.length - 2]
@@ -75,7 +69,7 @@ io.on('connection', socket => {
 
 				phraseInfo = getSomePhrase(indexPhrase)
 				phrase = phraseInfo.slice(0, phraseInfo.length - 2)	//	Get new phrase 
-				socket.emit("phrase", phrase, indexPhrase)	//	Emit next phrase
+				//socket.emit("phrase", phrase, indexPhrase)	//	Emit next phrase
 			}
 			else {
 				socket.emit("win")
@@ -90,13 +84,7 @@ io.on('connection', socket => {
 		}
 	})
 		//	Instantiates an new element in the lifePoints array and emit the first phrase
-		lifePointsHolder.push(newLifePoint(socket.id))
+	lifePointsHolder.push(newLifePoint(socket.id))
     socket.emit("initLifePoints", 5)
-		socket.emit("phrase", phraseInfo.slice(0, phraseInfo.length - 2), indexPhrase);
+		//socket.emit("phrase", phraseInfo.slice(0, phraseInfo.length - 2), indexPhrase);
 })
-
-http.listen(3000, function() {
-	console.log('Listening port 3000')
-});
-
-
