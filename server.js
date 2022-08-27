@@ -55,7 +55,7 @@ function pickRandomIndex(range, initValue) {
 	return generated = Math.floor(Math.random() * range + initValue)
 }
 
-function findClientInClientsList(clientId) {
+function findClient(clientId) {
 	return clients.findIndex(i => i.id === clientId)
 }
 /////////////////////////////////////////////////
@@ -97,10 +97,18 @@ io.on('connection', socket => {
   socket.emit("initLifePoints", 5)
 	socket.emit("phrase", clients[newClientIndex].currentPhrase.phrase, clients[newClientIndex].currentPhrase.index);
 
-	console.log("\n\nClient Object: ", clients[newClientIndex])
+	socket.on('disconnect', () => {
+		clients.splice(findClient(socket.id))
+		console.log(`Player ${socket.id} disconnect`)
+	})
 
-	socket.on('answear', (answear, indexesAlreadyUsed, sockete) => {
-		console.log(`\n\nNew answear: ${answear}\nIndexesUsed: ${indexesAlreadyUsed}\nClient id: ${sockete}`)
+	for (i = 0; i < clients.length; i++) {
+		console.log(clients[i])
+	}
+
+
+	socket.on('answear', (answear, indexesAlreadyUsed) => {
+		console.log(`\n\nNew answear: ${answear}\nIndexesUsed: ${indexesAlreadyUsed}\nClient id: ${socket.id}`)
 	/*	var hasSameValue = answear == phraseObject.correctAnswear
 		console.log(phraseObject)
 
@@ -134,6 +142,5 @@ io.on('connection', socket => {
 		}*/
 	})
 })
-
 
 
