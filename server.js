@@ -102,39 +102,8 @@ io.on('connection', socket => {
 		console.log(`Player ${socket.id} disconnect`)
 	})
 
-	socket.on('answear', (answear, indexesAlreadyUsed) => {
-		console.log(`\n\nNew answear: ${answear}\nIndexesUsed: ${indexesAlreadyUsed}\nClient id: ${socket.id}`)
-	/*	var hasSameValue = answear == phraseObject.correctAnswear
-		console.log(phraseObject)
-
-		if (hasSameValue) {
-
-			if (clients[findClientInClientsList(id)].correctAnswears == 50) {
-			socket.emit("win")
-			}
-
-			else if (categoryChoosed.amountInCategory > indexesAlreadyUsed.length && indexesAlreadyUsed.length <= 10) {
-				while (indexesAlreadyUsed.indexOf(phraseObject.index) != -1) {
-					phraseObject = getSomeRandomPhraseInCategory(categoryChoosed.category)
-				}
-				clients[findClientInClientsList(id)].correctAnswears += 1
-				socket.emit("phrase", phraseObject.phrase, phraseObject.index)	//	Emit next phrase
-			}
-			else {
-				categoryChoosed = getSomeCategory()
-				phraseObject = getSomeRandomPhraseInCategory(categoryChoosed.category)
-				socket.emit("clearIndexArray")
-				socket.emit("phrase", phraseObject.phrase, phraseObject.index)	//	Emit next phrase
-			}
-
-		}
-		else {
-			//	Get the index in the array of the id received, decrease lifePoints and emit the event
-			let indexIdInArray = findClientInClientsList(id)
-			clients[indexIdInArray].lifePoints -= 1
-			socket.emit("changeLifePoints", clients[indexIdInArray].lifePoints)
-			if (clients[indexIdInArray].lifePoints == 0) {socket.emit("lose")}
-		}*/
+	socket.on('answear', (answear) => {
+		console.log(`\n\nNew answear: ${answear}\nClient id: ${socket.id}`)
 	})
 })
 
