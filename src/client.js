@@ -20,7 +20,7 @@ $(document).ready(function() {
     })
 
     //  Change Always receives the event phrase
-    socket.on('phrase', (phrase,index)=>{
+    socket.on('phrase', phrase =>{
         $("#phrase").html(phrase)
     })
 
