@@ -22,13 +22,9 @@ $(document).ready(function() {
     //  Change Always receives the event phrase
     socket.on('phrase', (phrase,index)=>{
         $("#phrase").html(phrase)
-        indexesAlreadyUsed.push(index)
     })
 
-    socket.on('clearIndexArray', () => {
-        indexesAlreadyUsed = Array()
-    })
-    socket.on('win', ()=>{
+   socket.on('win', ()=>{
         $("#phrase").html("Você Venceu!!!")
     })
     socket.on('lose', () => {
@@ -41,14 +37,13 @@ $(document).ready(function() {
     })
 })
 
-let indexesAlreadyUsed = Array()
 
 function submitAnswear(element) {
 
     answear = element.value
     element.value = ""
 
-    socket.emit('answear', answear, indexesAlreadyUsed)
+    socket.emit('answear', answear)
 }
 
 function keyPress(e) {
