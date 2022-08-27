@@ -48,7 +48,7 @@ function submitAnswear(element) {
     answear = element.value
     element.value = ""
 
-    socket.emit('answear', answear, indexesAlreadyUsed)
+    socket.emit('answear', answear, indexesAlreadyUsed, socket.id)
 }
 
 function keyPress(e) {
