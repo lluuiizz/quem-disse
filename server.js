@@ -102,11 +102,6 @@ io.on('connection', socket => {
 		console.log(`Player ${socket.id} disconnect`)
 	})
 
-	for (i = 0; i < clients.length; i++) {
-		console.log(clients[i])
-	}
-
-
 	socket.on('answear', (answear, indexesAlreadyUsed) => {
 		console.log(`\n\nNew answear: ${answear}\nIndexesUsed: ${indexesAlreadyUsed}\nClient id: ${socket.id}`)
 	/*	var hasSameValue = answear == phraseObject.correctAnswear
