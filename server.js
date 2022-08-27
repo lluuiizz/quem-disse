@@ -10,10 +10,12 @@ var clients = Array()
 
 const client = (id) => {
     return {
-        id : id,
-        lifePoints : 5,
-				correctAnswears: 0,
-				currentPhrase : getPhraseObject()
+			id : id,
+			lifePoints : 5,
+			correctAnswears: 0,
+			currentPhraseObject : getPhraseObject(-1, [], []),
+			answearedIndexesInCategory: [],
+			categoryExcepcions : []
     }
 }
 
@@ -34,7 +36,7 @@ io.on('connection', socket => {
 	newClientIndex = clients.length - 1
 
   socket.emit("initLifePoints", 5)
-	socket.emit("phrase", clients[newClientIndex].currentPhrase.phrase, clients[newClientIndex].currentPhrase.index);
+	socket.emit("phrase", clients[newClientIndex].currentPhraseObject.phrase)
 
 	socket.on('disconnect', () => {
 		clients.splice(findClient(socket.id))
@@ -45,8 +47,8 @@ io.on('connection', socket => {
 		let client = clients[findClient(socket.id)]
 
 		switch (answear) {
-			case client.currentPhrase.correctAnswear:
-				console.log("To do")
+			case client.currentPhraseObject.correctAnswear:
+				correctAnswear(client, socket)
 			break;
 
 			default:
@@ -74,8 +76,11 @@ app.use(express.static(srcPath))
 //////////////////////////////////////////////////
 
 
-function getSomeCategory() {
-	let category = categorysOfPhrases[pickRandomIndex(amountOfCategorys, 0)]
+function getRandomCategoryObject(categoryExcpecions) {
+	do {
+		var category = categorysOfPhrases[pickRandomIndex(amountOfCategorys, 0)]
+	}	while(categoryExcpecions.indexOf(category) != -1)
+
 	let amount = directoryFiles(path.join(__dirname, 'phrases/'+category+'/')).length
 	return {
 		category: category,
@@ -84,9 +89,14 @@ function getSomeCategory() {
 }
 
 
-function getSomePhraseByCategory(category) {
+function getSomePhraseByCategory(category, cantBeIndexes) {
 	let categoryPath = path.join(__dirname, 'phrases/'+category+'/')
-	let phraseIndex = pickRandomIndex(directoryFiles(categoryPath).length, 1)
+	console.log(`CATEGORY: ${category}`)
+	do {
+		var phraseIndex = pickRandomIndex(directoryFiles(categoryPath).length, 1)
+
+	} while(cantBeIndexes.indexOf(phraseIndex) != -1);
+
 	const contents = fs.readFileSync(categoryPath + phraseIndex.toString() + '.txt', 'utf-8').split('\n')
 	const length = contents.length
 	return {
@@ -97,9 +107,15 @@ function getSomePhraseByCategory(category) {
 }
 
 
-function getPhraseObject() {
-		let category = getSomeCategory()
-		let phrase = getSomePhraseByCategory(category.category)
+function getPhraseObject(optionalCategory, optionalIndexes, categoryExcepcions) {
+		if (optionalCategory == -1) {
+			var category = getRandomCategoryObject(categoryExcepcions)
+		}
+		else {
+			var category = optionalCategory
+			console.log(category)
+		}
+		let phrase = getSomePhraseByCategory(category.category, optionalIndexes)
 
 		return {...category, ...phrase}
 
@@ -113,4 +129,35 @@ function findClient(clientId) {
 function wrongAnswear(client, socket) {
 	client.lifePoints--
 	socket.emit('changeLifePoints', client.lifePoints)
+}
+
+function correctAnswear(client, socket) {
+	client.correctAnswears++
+	alreadyAnsweared = client.answearedIndexesInCategory
+	amountOfPhrasesInCategory = client.currentPhraseObject.amountInCategory
+
+	alreadyAnsweared.push(client.currentPhraseObject.index)
+	client.categoryExcepcions.push(client.currentPhraseObject.category)
+
+	if (client.categoryExcepcions.length == amountOfCategorys) {
+		socket.emit("win")
+	}
+	else if (amountOfPhrasesInCategory > alreadyAnsweared.length && alreadyAnsweared.length <= 10 ) {
+		phraseObject = client.currentPhraseObject
+		categoryObject = {
+			category: phraseObject.category,
+			amountInCategory: phraseObject.amountInCategory
+		}
+
+		phraseObject = getPhraseObject(categoryObject, alreadyAnsweared, [])
+		client.currentPhraseObject = phraseObject
+	} else {
+		alreadyAnsweared = []
+		excepcions = client.categoryExcepcions
+
+		phraseObject = client.currentPhraseObject
+		phraseObject = getPhraseObject(-1, alreadyAnsweared, excepcions)
+		client.currentPhraseObject = phraseObject
+	}
+	socket.emit('phrase', client.currentPhraseObject.phrase)
 }
