@@ -3,63 +3,7 @@ const express = require('express')
 const http = require('http').createServer(app)
 const path = require('path')
 const io = require('socket.io')(http)
-
-//	Send Files to server
-
-function sendFileToServer (serverPath, localPath) {
-	app.get(serverPath, (req, res) => {
-		res.sendFile(__dirname + localPath)
-	})
-}
-var srcPath = path.join(__dirname, 'src')
-app.use(express.static(srcPath))
-//////////////////////////////////////////////////
-
-//	Handle files (Text files from /phrases)
 const fs = require('fs')
-
-function directoryFiles(dirPath) {
-	return fs.readdirSync(dirPath)
-}
-
-function getSomePhraseByCategory(category) {
-	let categoryPath = path.join(__dirname, 'phrases/'+category+'/')
-	let phraseIndex = pickRandomIndex(directoryFiles(categoryPath).length, 1)
-	const contents = fs.readFileSync(categoryPath + phraseIndex.toString() + '.txt', 'utf-8').split('\n')
-	const length = contents.length
-	return {
-		phrase : contents.slice(0, length - 2),
-		correctAnswear: contents[length - 2],
-		index: phraseIndex,
-	}
-}
-
-function getSomeCategory() {
-	let category = categorysOfPhrases[pickRandomIndex(amountOfCategorys, 0)]
-	let amount = directoryFiles(path.join(__dirname, 'phrases/'+category+'/')).length
-	return {
-		category: category,
-		amountInCategory: amount
-	}
-}
-
-
-function getPhraseObject() {
-		let category = getSomeCategory()
-		let phrase = getSomePhraseByCategory(category.category)
-
-		return {...category, ...phrase}
-
-}
-function pickRandomIndex(range, initValue) {
-	return generated = Math.floor(Math.random() * range + initValue)
-}
-
-function findClient(clientId) {
-	return clients.findIndex(i => i.id === clientId)
-}
-/////////////////////////////////////////////////
-
 
 //	Clients array and client object
 var clients = Array()
@@ -72,20 +16,15 @@ const client = (id) => {
 				currentPhrase : getPhraseObject()
     }
 }
-/////////////////////////////////////////////////////////////
 
 //	Start server
 http.listen(3000, function() {
 	console.log('Listening port 3000')
 });
-/////////////////////////////////////////////////////////////
 
 //	Constants of category
 const categorysOfPhrases = directoryFiles(path.join(__dirname, 'phrases'))	//	Count the amount of categorys in phrases directory
 const amountOfCategorys = categorysOfPhrases.length
-console.log(categorysOfPhrases)
-/////////////////////////////////////////////////////////////
-
 
 io.on('connection', socket => {
 	console.log("New connection", socket.id)
@@ -103,8 +42,75 @@ io.on('connection', socket => {
 	})
 
 	socket.on('answear', (answear) => {
-		console.log(`\n\nNew answear: ${answear}\nClient id: ${socket.id}`)
+		let client = clients[findClient(socket.id)]
+
+		switch (answear) {
+			case client.currentPhrase.correctAnswear:
+				console.log("To do")
+			break;
+
+			default:
+				wrongAnswear(client, socket)
+		}
 	})
 })
 
+//	Send Files to server
+function directoryFiles(dirPath) {
+	return fs.readdirSync(dirPath)
+}
 
+function pickRandomIndex(range, initValue) {
+	return generated = Math.floor(Math.random() * range + initValue)
+}
+
+function sendFileToServer (serverPath, localPath) {
+	app.get(serverPath, (req, res) => {
+		res.sendFile(__dirname + localPath)
+	})
+}
+var srcPath = path.join(__dirname, 'src')
+app.use(express.static(srcPath))
+//////////////////////////////////////////////////
+
+
+function getSomeCategory() {
+	let category = categorysOfPhrases[pickRandomIndex(amountOfCategorys, 0)]
+	let amount = directoryFiles(path.join(__dirname, 'phrases/'+category+'/')).length
+	return {
+		category: category,
+		amountInCategory: amount
+	}
+}
+
+
+function getSomePhraseByCategory(category) {
+	let categoryPath = path.join(__dirname, 'phrases/'+category+'/')
+	let phraseIndex = pickRandomIndex(directoryFiles(categoryPath).length, 1)
+	const contents = fs.readFileSync(categoryPath + phraseIndex.toString() + '.txt', 'utf-8').split('\n')
+	const length = contents.length
+	return {
+		phrase : contents.slice(0, length - 2),
+		correctAnswear: contents[length - 2],
+		index: phraseIndex,
+	}
+}
+
+
+function getPhraseObject() {
+		let category = getSomeCategory()
+		let phrase = getSomePhraseByCategory(category.category)
+
+		return {...category, ...phrase}
+
+}
+
+//	Client Related Functions
+function findClient(clientId) {
+	return clients.findIndex(i => i.id === clientId)
+}
+
+function wrongAnswear(client, socket) {
+	client.lifePoints--
+	socket.emit('changeLifePoints', client.lifePoints)
+}
