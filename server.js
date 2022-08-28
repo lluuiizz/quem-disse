@@ -129,6 +129,8 @@ function findClient(clientId) {
 function wrongAnswear(client, socket) {
 	client.lifePoints--
 	socket.emit('changeLifePoints', client.lifePoints)
+
+	if (client.lifePoints == 0) {socket.emit('lose')}
 }
 
 function correctAnswear(client, socket) {
@@ -139,7 +141,7 @@ function correctAnswear(client, socket) {
 	alreadyAnsweared.push(client.currentPhraseObject.index)
 	client.categoryExcepcions.push(client.currentPhraseObject.category)
 
-	if (client.categoryExcepcions.length == amountOfCategorys) {
+	if (client.correctAnswears == 10) {
 		socket.emit("win")
 	}
 	else if (amountOfPhrasesInCategory > alreadyAnsweared.length && alreadyAnsweared.length <= 10 ) {
