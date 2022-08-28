@@ -86,17 +86,11 @@ h1 {
 #category {
     font-family: Arial;
     font-size: 40px;
-<<<<<<< HEAD
-    color: #EEEEEE;
-=======
     color: navajowhite;
->>>>>>> feature/answears_counter
     position: fixed;
     bottom: 0;
     text-transform: uppercase;
 }
-<<<<<<< HEAD
-=======
 
 
 #score {
@@ -108,4 +102,3 @@ h1 {
     font-family: Arial;
     color: navajowhite;
 }
->>>>>>> feature/answears_counter
