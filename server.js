@@ -19,6 +19,7 @@ const client = (id) => {
     }
 }
 
+const ANSWEARS_TO_WIN = 20
 //	Start server
 http.listen(3000, function() {
 	console.log('Listening port 3000')
@@ -37,6 +38,7 @@ io.on('connection', socket => {
 
   socket.emit("initLifePoints", 5)
 	socket.emit("phrase", clients[newClientIndex].currentPhraseObject.phrase, clients[newClientIndex].currentPhraseObject.category)
+	socket.emit("changeScore", clients[newClientIndex].correctAnswears, ANSWEARS_TO_WIN)
 
 	socket.on('disconnect', () => {
 		clients.splice(findClient(socket.id))
@@ -49,6 +51,8 @@ io.on('connection', socket => {
 		switch (answear) {
 			case client.currentPhraseObject.correctAnswear:
 				correctAnswear(client, socket)
+				socket.emit("changeScore", client.correctAnswears, ANSWEARS_TO_WIN)
+
 			break;
 
 			default:
@@ -141,7 +145,7 @@ function correctAnswear(client, socket) {
 	alreadyAnsweared.push(client.currentPhraseObject.index)
 	client.categoryExcepcions.push(client.currentPhraseObject.category)
 
-	if (client.correctAnswears == 10) {
+	if (client.correctAnswears == ANSWEARS_TO_WIN) {
 		socket.emit("win")
 	}
 	else if (amountOfPhrasesInCategory > alreadyAnsweared.length && alreadyAnsweared.length <= 10 ) {
