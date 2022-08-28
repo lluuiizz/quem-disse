@@ -36,7 +36,7 @@ io.on('connection', socket => {
 	newClientIndex = clients.length - 1
 
   socket.emit("initLifePoints", 5)
-	socket.emit("phrase", clients[newClientIndex].currentPhraseObject.phrase)
+	socket.emit("phrase", clients[newClientIndex].currentPhraseObject.phrase, clients[newClientIndex].currentPhraseObject.category)
 
 	socket.on('disconnect', () => {
 		clients.splice(findClient(socket.id))
@@ -161,5 +161,5 @@ function correctAnswear(client, socket) {
 		phraseObject = getPhraseObject(-1, alreadyAnsweared, excepcions)
 		client.currentPhraseObject = phraseObject
 	}
-	socket.emit('phrase', client.currentPhraseObject.phrase)
+	socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category)
 }
