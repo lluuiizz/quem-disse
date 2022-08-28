@@ -22,10 +22,17 @@ $(document).ready(function() {
     //  Change Always receives the event phrase
     socket.on('phrase', phrase =>{
         $("#phrase").html(phrase)
+
     })
 
    socket.on('win', ()=>{
-        $("#phrase").html("Você Venceu!!!")
+        $(".center").hide(1500);
+        $("#field").hide(1500);
+        $("h1").slideUp(0)
+        $("h1").slideDown(2000)
+        $("h1").text("Você Venceu!")
+        $("h1").fadeIn(5000)
+
     })
     socket.on('lose', () => {
         $(".center").hide(1500);
