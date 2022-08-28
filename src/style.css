@@ -33,7 +33,7 @@ body {
 	right: 0;
 	width: 260px;
 	background: transparent;
-		text-align: right;
+text-align: right;
 
 }
 
@@ -83,4 +83,11 @@ h1 {
     overflow-y: auto;
 }
 
-
+#category {
+    font-family: Arial;
+    font-size: 40px;
+    color: #EEEEEE;
+    position: fixed;
+    bottom: 0;
+    text-transform: uppercase;
+}
