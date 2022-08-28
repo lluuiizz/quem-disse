@@ -145,6 +145,10 @@ function correctAnswear(client, socket) {
 	alreadyAnsweared.push(client.currentPhraseObject.index)
 	client.categoryExcepcions.push(client.currentPhraseObject.category)
 
+
+	 //	Debug
+	console.log(`\n\nAlready answeared: ${alreadyAnsweared}\n\nAmount: ${amountOfPhrasesInCategory}`)
+
 	if (client.correctAnswears == ANSWEARS_TO_WIN) {
 		socket.emit("win")
 	}
@@ -158,7 +162,7 @@ function correctAnswear(client, socket) {
 		phraseObject = getPhraseObject(categoryObject, alreadyAnsweared, [])
 		client.currentPhraseObject = phraseObject
 	} else {
-		alreadyAnsweared = []
+		alreadyAnsweared.length = 0 
 		excepcions = client.categoryExcepcions
 
 		phraseObject = client.currentPhraseObject
