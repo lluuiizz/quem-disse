@@ -25,7 +25,9 @@ $(document).ready(function() {
         $("#category").html(category)
 
     })
-
+    socket.on('changeScore', (score, max) => {
+        $("#score").html(`${score} / ${max}`)
+    })
    socket.on('win', ()=>{
         $(".center").hide(1500);
         $("#field").hide(1500);
