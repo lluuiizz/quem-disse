@@ -48,8 +48,8 @@ io.on('connection', socket => {
 	socket.on('answear', (answear) => {
 		let client = clients[findClient(socket.id)]
 
-		switch (answear) {
-			case client.currentPhraseObject.correctAnswear:
+		switch (answear.toLowerCase()) {
+			case client.currentPhraseObject.correctAnswear.toLowerCase():
 				correctAnswear(client, socket)
 				socket.emit("changeScore", client.correctAnswears, ANSWEARS_TO_WIN)
 
