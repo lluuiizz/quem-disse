@@ -1,5 +1,5 @@
 #	Ignore all scripts used that does nothing to the site itself
-scripts/
+scripts/*
 
 # Ignore ALL TODO files that was created for ideas organizing purpose
 TODO*.txt
