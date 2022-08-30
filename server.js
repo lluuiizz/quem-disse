@@ -5,6 +5,10 @@ const path = require('path')
 const io = require('socket.io')(http)
 const fs = require('fs')
 
+//	Send files from src to server
+var srcPath = path.join(__dirname, 'src')
+app.use(express.static(srcPath))
+
 //	Clients array and client object
 var clients = Array()
 
@@ -19,7 +23,7 @@ const client = (id) => {
     }
 }
 
-const ANSWEARS_TO_WIN = 20
+const ANSWEARS_TO_WIN = 10
 //	Start server
 http.listen(3000, function() {
 	console.log('Listening port 3000')
@@ -61,7 +65,6 @@ io.on('connection', socket => {
 	})
 })
 
-//	Send Files to server
 function directoryFiles(dirPath) {
 	return fs.readdirSync(dirPath)
 }
@@ -70,13 +73,12 @@ function pickRandomIndex(range, initValue) {
 	return generated = Math.floor(Math.random() * range + initValue)
 }
 
-function sendFileToServer (serverPath, localPath) {
-	app.get(serverPath, (req, res) => {
-		res.sendFile(__dirname + localPath)
-	})
+//	Client Related Functions
+function findClient(clientId) {
+	return clients.findIndex(i => i.id === clientId)
 }
-var srcPath = path.join(__dirname, 'src')
-app.use(express.static(srcPath))
+
+
 //////////////////////////////////////////////////
 
 
@@ -125,34 +127,12 @@ function getPhraseObject(optionalCategory, optionalIndexes, categoryExcepcions) 
 
 }
 
-//	Client Related Functions
-function findClient(clientId) {
-	return clients.findIndex(i => i.id === clientId)
-}
-
-function wrongAnswear(client, socket) {
-	client.lifePoints--
-	socket.emit('changeLifePoints', client.lifePoints)
-
-	if (client.lifePoints == 0) {socket.emit('lose')}
-}
-
-function correctAnswear(client, socket) {
-	client.correctAnswears++
+function nextPhrase(client) {
 	alreadyAnsweared = client.answearedIndexesInCategory
 	amountOfPhrasesInCategory = client.currentPhraseObject.amountInCategory
-
 	alreadyAnsweared.push(client.currentPhraseObject.index)
-	client.categoryExcepcions.push(client.currentPhraseObject.category)
 
-
-	 //	Debug
-	console.log(`\n\nAlready answeared: ${alreadyAnsweared}\n\nAmount: ${amountOfPhrasesInCategory}`)
-
-	if (client.correctAnswears == ANSWEARS_TO_WIN) {
-		socket.emit("win")
-	}
-	else if (amountOfPhrasesInCategory > alreadyAnsweared.length && alreadyAnsweared.length <= 10 ) {
+	if (amountOfPhrasesInCategory > alreadyAnsweared.length && alreadyAnsweared.length <= 10 ) {
 		phraseObject = client.currentPhraseObject
 		categoryObject = {
 			category: phraseObject.category,
@@ -162,12 +142,28 @@ function correctAnswear(client, socket) {
 		phraseObject = getPhraseObject(categoryObject, alreadyAnsweared, [])
 		client.currentPhraseObject = phraseObject
 	} else {
-		alreadyAnsweared.length = 0 
+		alreadyAnsweared.length = 0
 		excepcions = client.categoryExcepcions
-
+		excepcions.push(client.currentPhraseObject.category)
 		phraseObject = client.currentPhraseObject
 		phraseObject = getPhraseObject(-1, alreadyAnsweared, excepcions)
 		client.currentPhraseObject = phraseObject
 	}
-	socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category)
+
+}
+
+
+function wrongAnswear(client, socket) {
+	client.lifePoints--
+	socket.emit('changeLifePoints', client.lifePoints)
+
+	if (client.lifePoints == 0) {socket.emit('lose')}
+	else {nextPhrase(client); socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category)}
+}
+
+function correctAnswear(client, socket) {
+	client.correctAnswears++
+
+	if (client.correctAnswears == ANSWEARS_TO_WIN) {socket.emit("win")}
+	else {nextPhrase(client); socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category)}
 }
