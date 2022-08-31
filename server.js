@@ -23,7 +23,7 @@ const client = (id) => {
     }
 }
 
-const ANSWEARS_TO_WIN = 10
+const ANSWEARS_TO_WIN = 20
 //	Start server
 http.listen(3000, function() {
 	console.log('Listening port 3000')
@@ -36,13 +36,7 @@ const amountOfCategorys = categorysOfPhrases.length
 io.on('connection', socket => {
 	console.log("New connection", socket.id)
 
-		//	Instantiates an new element in the lifePoints array and emit the first phrase
-	clients.push(client(socket.id))
-	newClientIndex = clients.length - 1
-
-  socket.emit("initLifePoints", 5)
-	socket.emit("phrase", clients[newClientIndex].currentPhraseObject.phrase, clients[newClientIndex].currentPhraseObject.category)
-	socket.emit("changeScore", clients[newClientIndex].correctAnswears, ANSWEARS_TO_WIN)
+	createNewClient(socket)
 
 	socket.on('disconnect', () => {
 		clients.splice(findClient(socket.id))
@@ -52,8 +46,10 @@ io.on('connection', socket => {
 	socket.on('answear', (answear) => {
 		let client = clients[findClient(socket.id)]
 
-		switch (answear.toLowerCase()) {
-			case client.currentPhraseObject.correctAnswear.toLowerCase():
+		console.log(`Answear: ${answear}`)
+
+		switch (answear) {
+			case client.currentPhraseObject.correctAnswear:
 				correctAnswear(client, socket)
 				socket.emit("changeScore", client.correctAnswears, ANSWEARS_TO_WIN)
 
@@ -74,6 +70,22 @@ function pickRandomIndex(range, initValue) {
 }
 
 //	Client Related Functions
+function createNewClient(socket) {
+	//	Instantiates an new element in the lifePoints array and emit the first phrase
+	clients.push(client(socket.id))
+	newClientIndex = clients.length - 1
+
+	let newClient = clients[newClientIndex]
+
+  socket.emit("initLifePoints", 5)
+	socket.emit("phrase", newClient.currentPhraseObject.phrase, newClient.currentPhraseObject.category)
+
+	socket.emit("changeAnswearsButtons", getAnswearOptionsToPhrase(newClient.currentPhraseObject.correctAnswear, newClient.currentPhraseObject.category))
+
+	socket.emit("changeScore", newClient.correctAnswears, ANSWEARS_TO_WIN)
+
+}
+
 function findClient(clientId) {
 	return clients.findIndex(i => i.id === clientId)
 }
@@ -101,7 +113,7 @@ function getSomePhraseByCategory(category, cantBeIndexes) {
 	do {
 		var phraseIndex = pickRandomIndex(directoryFiles(categoryPath).length, 1)
 
-	} while(cantBeIndexes.indexOf(phraseIndex) != -1);
+	} while(cantBeIndexes.indexOf(phraseIndex) != -1 ); 
 
 	const contents = fs.readFileSync(categoryPath + phraseIndex.toString() + '.txt', 'utf-8').split('\n')
 	const length = contents.length
@@ -125,6 +137,39 @@ function getPhraseObject(optionalCategory, optionalIndexes, categoryExcepcions) 
 
 		return {...category, ...phrase}
 
+}
+
+function getAnswearOptionsToPhrase(correct, category) {
+	let answears = Array()
+
+	answears.push(correct)
+
+
+	for (i = 0; i <  3; i++) {
+		do {
+				var phraseGet = getSomePhraseByCategory(category, [])
+		} while(answears.indexOf(phraseGet.correctAnswear) != -1);
+
+		answears.push(phraseGet.correctAnswear)
+	}
+
+	let randomIndex = pickRandomIndex(4, 0)
+	let temp = answears[randomIndex]
+	answears[randomIndex] = answears[0]
+	answears[0] = temp
+
+	return shuffleArray(answears)
+}
+
+function shuffleArray(array) {
+	for (i = array.length - 1; i > 0; i--) {
+		let j = Math.floor(Math.random() * i + 1)
+		let temp = array[i]
+		array[i] = array[j]
+		array[j] = temp
+	}
+
+	return array
 }
 
 function nextPhrase(client) {
@@ -158,12 +203,27 @@ function wrongAnswear(client, socket) {
 	socket.emit('changeLifePoints', client.lifePoints)
 
 	if (client.lifePoints == 0) {socket.emit('lose')}
-	else {nextPhrase(client); socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category)}
+	else {
+		nextPhrase(client);
+		socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category);
+		let options = getAnswearOptionsToPhrase(client.currentPhraseObject.correctAnswear, client.currentPhraseObject.category)
+		socket.emit("changeAnswearsButtons", options)
+	}
 }
 
 function correctAnswear(client, socket) {
 	client.correctAnswears++
+	socket.emit("changeScore", client.correctAnswears, ANSWEARS_TO_WIN)
 
-	if (client.correctAnswears == ANSWEARS_TO_WIN) {socket.emit("win")}
-	else {nextPhrase(client); socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category)}
+	if (client.correctAnswears == ANSWEARS_TO_WIN)	{
+		socket.emit("win")
+	}
+	else {
+		nextPhrase(client);
+		socket.emit('phrase', client.currentPhraseObject.phrase, client.currentPhraseObject.category);
+
+		let options = getAnswearOptionsToPhrase(client.currentPhraseObject.correctAnswear, client.currentPhraseObject.category)
+		socket.emit("changeAnswearsButtons", options)
+	}
 }
+
