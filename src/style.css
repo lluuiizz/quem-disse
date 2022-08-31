@@ -42,7 +42,7 @@ text-align: right;
 	height: 45px;
 }
 
-.input_box {
+.answears {
   position: absolute;
   left: 50%;
   top: 70%;
@@ -50,7 +50,7 @@ text-align: right;
   padding: 0px;
 }
 
-.input_box input {
+.answears button {
 
 background: transparent;
 color: #EEEEEE;
