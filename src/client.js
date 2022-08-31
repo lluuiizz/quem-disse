@@ -30,7 +30,7 @@ $(document).ready(function() {
     })
    socket.on('win', ()=>{
         $(".center").hide(1500);
-        $("#field").hide(1500);
+        $(".answears").hide(1500);
         $("h1").slideUp(0)
         $("h1").slideDown(2000)
         $("h1").text("Você Venceu!")
@@ -39,37 +39,26 @@ $(document).ready(function() {
     })
     socket.on('lose', () => {
         $(".center").hide(1500);
-        $("#field").hide(1500);
+        $(".").hide(1500);
         $("h1").slideUp(0)
         $("h1").slideDown(2000)
         $("h1").text("Você Perdeu!")
         $("h1").fadeIn(5000)
+    })
+
+
+    socket.on("changeAnswearsButtons", (options) => {
+        for (i = 0; i < 4; i++) {
+            $("#button"+i).text(options[i])
+        }
     })
 })
 
 
 function submitAnswear(element) {
 
-    answear = element.value
-    element.value = ""
-
+    answear = element.textContent
     socket.emit('answear', answear)
 }
 
-function keyPress(e) {
-    var keynum;
 
-    if (window.event) {
-        // IE
-        keynum = e.keyCode;
-    } else if (e.which) {
-        // Netscape/Firefox/Opera
-        keynum = e.which;
-    }
-
-    if (keynum == 13) {
-        // 13 == enter
-        let element = document.getElementById('field');
-        submitAnswear(element)
-    }
-}
