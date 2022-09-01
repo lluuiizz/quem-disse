@@ -53,19 +53,20 @@ text-align: right;
 }
 
 .answears button {
-
-background: #5b000000;
-color: #52B3A5;
-font-family: Typewriter;
-font-size: 20px;
-outline: none;
-border: 2px solid #cc7979;
-border-radius: 5px;
-text-align: center;
-font-weight: bold;
-margin-top: 10px;
+    background: #5b000000;
+    color: #52B3A5;
+    font-family: Typewriter;
+    font-size: 20px;
+    outline: none;
+    border: 2px solid #cc7979;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
 }
-
+.answears button:hover {
+    border-color: black;
+}
 .title {
     position: absolute;
     left: 50%;
