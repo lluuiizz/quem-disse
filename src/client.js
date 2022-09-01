@@ -39,7 +39,7 @@ $(document).ready(function() {
     })
     socket.on('lose', () => {
         $(".center").hide(1500);
-        $(".").hide(1500);
+        $(".answears").hide(1500);
         $("h1").slideUp(0)
         $("h1").slideDown(2000)
         $("h1").text("Você Perdeu!")
