@@ -1,5 +1,5 @@
 body {
-    background-color: #2E2E2E;
+    background-color: #3D3C42;
     font-family: Typewriter;
 }
 
@@ -15,7 +15,7 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    border: 3px solid #393E46;
+    border: 3px solid #D76F6F;
     border-radius: 25px;
     background-color: transparent;
     padding: 10px;
@@ -45,22 +45,25 @@ text-align: right;
 .answears {
   position: absolute;
   left: 50%;
-  top: 70%;
+  top: 79%;
   transform: translate(-50%, -90%);
   padding: 0px;
+  align-content: center;
+  display: grid;
 }
 
 .answears button {
 
-background: transparent;
-color: #EEEEEE;
+background: #5b000000;
+color: #52B3A5;
 font-family: Typewriter;
 font-size: 20px;
 outline: none;
-border: 3px solid #393E46;
-border-radius: 10px;
+border: 2px solid #cc7979;
+border-radius: 5px;
 text-align: center;
 font-weight: bold;
+margin-top: 10px;
 }
 
 .title {
@@ -71,13 +74,13 @@ font-weight: bold;
     padding: 5px;
 }
 h1 {
-    color: #EEEEEE;
+    color: #CC5B5B;
     font-family: Arial;
 }
 
 
 #phrase {
-    color: #EEEEEE;
+    color: #60E88F;
     text-align: center;
     margin: 0em;
     overflow-y: auto;
@@ -86,7 +89,7 @@ h1 {
 #category {
     font-family: Arial;
     font-size: 40px;
-    color: navajowhite;
+    color: #ff6b6b;
     position: fixed;
     bottom: 0;
     text-transform: uppercase;
@@ -95,10 +98,13 @@ h1 {
 
 #score {
     position: absolute;
-    width: 99%;
+    left: 46.5%;
     bottom: 0;
     text-align: center;
     font-size: 40px;
     font-family: Arial;
-    color: navajowhite;
+    color: #ff6b6b;
+    width: fit-content;
 }
+
+
