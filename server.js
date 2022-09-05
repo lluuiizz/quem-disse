@@ -25,7 +25,7 @@ const client = (id) => {
 
 const ANSWEARS_TO_WIN = 20
 //	Start server
-http.listen(3000, function() {
+http.listen(process.env.PORT || 3000, function() {
 	console.log('Listening port 3000')
 });
 
