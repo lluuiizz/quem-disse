@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="br">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Quem disse?</title>
+	<meta name="description" content="Advinhe quem disse a frase!!!">
+	<link rel="shortcut icon" href="/images/favicon.ico" />
+
+
+	<meta name="author" content="Luiz G. Silva">
+
+	<script src="/socket.io/socket.io.js"> </script>
+	<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src='/client.js'></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<!-- your content here... -->
+	<div class="title">
+		<h1>QUEM DISSE?</h1>
+	</div>
+	<div class="center">
+		<h2 id="phrase"></h2>
+	</div>
+	<div class="answears">
+		<button onclick="submitAnswear(this)" id="button0"></button>
+		<button onclick="submitAnswear(this)" id="button1"></button>
+		<button onclick="submitAnswear(this)" id="button2"></button>
+		<button onclick="submitAnswear(this)" id="button3"></button>
+	</div>
+	<div class="lifePoints"></div>
+	<div id="category"></div>
+	<div id="score">
+</body>
+
+</html>
