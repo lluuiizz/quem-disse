@@ -27,6 +27,15 @@ body {
     overflow-x: hidden;
 }
 
+.records {
+    height: 300px;
+    width: 200px;
+    top: 38%;
+    right: 0%;
+    position: absolute;
+    background-color: transparent;
+}
+
 .lifePoints {
 	position: fixed;
 	bottom: 0;
