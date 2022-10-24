@@ -17,14 +17,8 @@
 	<link rel="stylesheet" href="indxstyle.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src='/indexjs.js'></script>
 
-    <script>
-        function howtoplaypage() {
-            alert("Foda-se!")
-
-        }
-
-    </script>
 </head>
 
 <body>
@@ -32,20 +26,20 @@
 	<div class="title">
 		<h1>QUEM DISSE?</h1>
 	</div>
-    <form action ="/game.html" class="was-validated">
+    <form action ="/game.html" class="was-validated" id="login">
         <div class="form-group">
-            <label for="uname">Username:</label>
+            <label for="uname">Usuário:</label>
             <input type="text" class="form-control" id="uname" placeholder="Enter username" name="uname" required>
-            <div class="invalid-feedback"> Please fill out this field.</div>
+            <div class="invalid-feedback"> Por favor preencha este campo.</div>
         </div>
         <div class="form-group">
-            <label for="pwd">Password:</label>
+            <label for="pwd">Senha:</label>
             <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
-            <div class="invalid-feedback">Please fill out this field.</div>
+            <div class="invalid-feedback">Por favor preencha este campo.</div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="button" class="btn btn-outline-light" id="how-to-play" onclick="howtoplaypage()">How to play</button>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="button" class="btn btn-outline-light" id="how-to-play" onclick="howtoplaypage()">Como Jogar</button>
     </form>
 </body>
 </html>
