@@ -5,7 +5,7 @@ function howtoplaypage() {
         $("p").hide()
         $("body").prepend("<button type='button' class='btn btn-outline-light' id='return-mainpage' onclick='mainpage()'>Retornar</button>")
         $("#return-mainpage").hide()
-        $("head").prepend("<style>p {position: absolute; left: 50%; top: 35%; transform: translate(-50%, -50%); color: white;} #return-mainpage {position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%);}</style>")
+        $("head").prepend("<style id='how-page-css'>p {position: absolute; left: 50%; top: 35%; transform: translate(-50%, -50%); color: white;} #return-mainpage {position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%);}</style>")
         $("p").fadeIn(2000)
         $("#return-mainpage").fadeIn(2000)
     })
@@ -15,6 +15,9 @@ function mainpage() {
     $(document).ready(function () {
         $("p").fadeOut(1000)
         $("#return-mainpage").fadeOut(1000)
+        $("p").remove()
+        $("#return-mainpage").remove()
+        $("#how-page-css").remove()
         $("form").fadeIn(2000)
 
 
