@@ -31,3 +31,8 @@ form {
     color: #52B3A5 !important;
 }
 
+@media (max-width:999px) {
+    .title h1 {
+        left: 22.5%;
+    }
+}

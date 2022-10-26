@@ -9,7 +9,6 @@ body {
 }
 
 
-
 .center {
     position: absolute;
     left: 50%;
@@ -33,7 +32,7 @@ body {
 	right: 0;
 	width: 260px;
 	background: transparent;
-text-align: right;
+    text-align: right;
 
 }
 
@@ -94,6 +93,7 @@ h1 {
     position: fixed;
     bottom: 0;
     text-transform: uppercase;
+    font-family: Typewriter;
 }
 
 
@@ -106,6 +106,41 @@ h1 {
     font-family: Arial;
     color: #ff6b6b;
     width: fit-content;
+    font-family: Typewriter;
 }
 
+@media (max-width:999px) {
+    .title{
+        width:100%;
+        top: 25%;
+    }
+    .title h1 {
+        text-align: center; 
+    }
+    
+    .center {
+        width: 70%; 
+        top: 50%; 
+    }
 
+    .answears {
+        top: 80%; 
+    }
+
+    #category {
+        top: 85%;
+        font-size: 30px;
+    }
+
+    #score {
+        top: 85%; 
+        left: 60%;
+        font-size 60px;
+    }
+    
+    .lifePoints {
+        top: 92.5%; 
+        left: 20%;
+    }
+
+}
